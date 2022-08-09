@@ -63,7 +63,7 @@ drive letters as per this specification:
 ```yaml
 drive_configuration:
   - letter: d
-    label: x_mirror
+    label: scratch
     number: 1
     online: true
     readonly: false
@@ -74,10 +74,9 @@ drive_configuration:
     readonly: false
 ```
 
-Where `builds` is a drive for build spaces, and `x_mirror` a drive holding local copies of compiled
-libraries, data etc. required to build our software. You can similarly assign specific drive letters
-to any drives you've specified in your VM configuration and formatted using the `<DiskConfiguration>`
-section in your Windows' `autounattend.xml` file.
+You can similarly assign specific drive letters to any drives you've specified in your VM
+configuration and formatted using the `<DiskConfiguration>` section in your Windows
+`autounattend.xml` file.
 
 The `number`, `online` and `readonly` fields in the `drive_configuration` section apply only to Windows
 Server targets; on these systems the drive configuration task will use the drive number to ensure
