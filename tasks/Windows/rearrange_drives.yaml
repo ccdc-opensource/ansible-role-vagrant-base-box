@@ -1,0 +1,57 @@
+---
+- name: Move optical drives to end of alphabet
+  ansible.windows.win_shell: |
+    Get-WMIObject -Class Win32_CDROMDrive  -ErrorAction Stop | ForEach-Object {
+      # Get volume object for drive
+      $CurrentDriveLetter = $_.drive
+      $volume = Get-WMIObject -Class Win32_Volume -Filter "DriveLetter='$CurrentDriveLetter'" -ErrorAction Stop
+
+      # Find first free drive letter backwards from Z:
+      $NewDriveLetter = Get-ChildItem function:[d-z]: -Name | `
+        Where-Object { (New-Object System.IO.DriveInfo($_)).DriveType -eq 'NoRootDirectory' } | `
+        Sort-Object -Descending | Select-Object -First 1
+
+      # Reassign volume to new drive letter
+      Set-WMIInstance -InputObject $volume -Arguments @{DriveLetter=$NewDriveLetter} -ErrorAction Stop
+    }
+
+- name: Bring specified disks online on Windows Server
+  when: disk.number is defined and disk.online is defined and ansible_facts.os_installation_type == "Server"
+  ansible.windows.win_shell: |
+    Set-Disk -Number {{ disk.number }} -IsOffline {{ "$False" if disk.online else "$True" }}
+    Set-Disk -Number {{ disk.number }} -IsReadonly {{ "$True" if disk.readonly is defined and disk.readonly else "$False" }}
+  loop: "{{ drive_configuration }}"
+  loop_control:
+    loop_var: disk
+
+- name: Assign hard drives as per specficiation
+  when: drive.online is not defined or drive.online
+  ansible.windows.win_shell: |
+    $volume = Get-WMIObject -Class Win32_Volume -Filter "Label='{{ drive.label }}'" -ErrorAction Stop
+    Set-WMIInstance -InputObject $volume -Arguments @{DriveLetter="{{ drive.letter }}:"} -ErrorAction Stop
+  loop: "{{ drive_configuration }}"
+  loop_control:
+    loop_var: drive
+
+- name: Get final hard drive letter
+  ansible.windows.win_shell: |
+    # Find drive letter for final hard drive
+    Write-Host (Get-Volume | Where-Object {$_.DriveType -eq "Fixed"} | `
+      Sort-Object -Property DriveLetter | Select-Object -Last 1).DriveLetter
+  register: final_hard_drive
+
+- name: Rearrange optical drives after hard drives
+  ansible.windows.win_shell: |
+    Get-WMIObject -Class Win32_CDROMDrive -ErrorAction Stop | ForEach-Object {
+      # Get volume object for drive
+      $CurrentDriveLetter = $_.drive
+      $volume = Get-WMIObject -Class Win32_Volume -Filter "DriveLetter='$CurrentDriveLetter'" -ErrorAction Stop
+
+      # Find first free drive letter after final hard drive
+      $NewDriveLetter = Get-ChildItem function:[{{ final_hard_drive.stdout | trim | lower }}-z]: -Name | `
+        Where-Object { (New-Object System.IO.DriveInfo($_)).DriveType -eq 'NoRootDirectory' } | `
+        Select-Object -First 1
+
+      Write-Host "Reassigning $CurrentDriveLetter to $NewDriveLetter"
+      Set-WMIInstance -InputObject $volume -Arguments @{DriveLetter=$NewDriveLetter} -ErrorAction Stop
+    }
