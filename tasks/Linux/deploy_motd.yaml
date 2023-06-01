@@ -1,0 +1,30 @@
+---
+- name: Check for /etc/update-motd.d/
+  ansible.builtin.stat:
+    path: /etc/update-motd.d
+  register: update-motd
+
+- name: Deploy motd to /etc/update-motd.d/
+  when: update-motd.stat.exists
+  ansible.builtin.template:
+    src: templates/motd.j2
+    dest: /etc/update-motd.d/99-buildinfo
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Make /etc/update-motd.d/99-buildinfo a shell script
+  when: update-motd.stat.exists
+  ansible.builtin.lineinfile:
+    line: "#!/bin/sh"
+    path: /etc/update-motd.d/99-buildinfo
+    insertbefore: BOF
+
+- name: Deploy motd to /etc/motd
+  when: not update-motd.stat.exists
+  ansible.builtin.template:
+    src: templates/motd.j2
+    dest: /etc/motd
+    owner: root
+    group: root
+    mode: '0755'

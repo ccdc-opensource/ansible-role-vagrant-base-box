@@ -1,0 +1,23 @@
+---
+- name: Update yum packages
+  ansible.builtin.yum:
+    name: "*"
+    state: latest
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
+
+- name: Update dnf packages
+  ansible.builtin.dnf:
+    name: "*"
+    state: latest
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version != "7"
+
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: true
+  when: ansible_os_family == "Debian"
+
+- name: Update apt packages
+  ansible.builtin.apt:
+    name: "*"
+    state: latest
+  when: ansible_os_family == "Debian"

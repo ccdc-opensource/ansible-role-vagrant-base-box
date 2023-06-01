@@ -1,0 +1,24 @@
+---
+# Fix slow DNS: Add 'single-request-reopen' so it is included when /etc/resolv.conf is
+# generated - https://access.redhat.com/site/solutions/58625 (subscription required)
+- name: Fix slow DNS on RHEL
+  when: ansible_os_family == "RedHat" and ansible_virtualization_type == "virtualbox"
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/sysconfig/network
+    line: RES_OPTIONS="single-request-reopen"
+    state: present
+  register: rhel_dns_fix
+
+- name: Restart RHEL8+ networking if needed
+  when: rhel_dns_fix.changed and ansible_distribution_major_version >= 8
+  ansible.builtin.shell: |
+    nmcli networking off
+    sleep 5
+    nmcli networking on
+
+- name: Restart RHEL7 networking if needed
+  when: rhel_dns_fix.changed and ansible_distribution_major_version < 8
+  ansible.builtin.service:
+    name: network
+    state: restarted

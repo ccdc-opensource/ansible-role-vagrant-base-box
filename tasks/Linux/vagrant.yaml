@@ -1,0 +1,13 @@
+---
+- name: Create vagrant user
+  ansible.builtin.user:
+    name: vagrant
+    comment: Default Vagrant user
+    uid: 1000
+    group: sudo
+
+- name: Set up default Vagrant ssh key
+  ansible.posix.authorized_key:
+    user: vagrant
+    state: present
+    key: "{{ lookup('url', 'https://raw.githubusercontent.com/mitchellh/vagrant/master/keys/vagrant.pub', split_lines=False) }}"

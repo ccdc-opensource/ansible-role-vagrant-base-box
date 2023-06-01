@@ -1,0 +1,16 @@
+---
+- name: Enable vault on CentOS
+  when: ansible.distribution == "CentOS"
+  ansible.builtin.include_tasks: Linux/enable_centos_vault.yaml
+
+- name: Update system
+  ansible.builtin.include_tasks: Linux/update_system.yaml
+
+- name: Set motd with build info
+  ansible.builtin.include_tasks: Linux/deploy_motd.yaml
+
+- name: Set up networking
+  ansible.builtin.include_tasks: Linux/networking.yaml
+
+- name: Set up Vagrant user
+  ansible.builtin.include_tasks: Linux/vagrant.yaml
