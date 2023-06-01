@@ -1,11 +1,11 @@
 ---
-- name: Update yum packages
+- name: Update yum packages  # noqa: package-latest
   ansible.builtin.yum:
     name: "*"
     state: latest
   when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
 
-- name: Update dnf packages
+- name: Update dnf packages  # noqa: package-latest
   ansible.builtin.dnf:
     name: "*"
     state: latest
@@ -16,7 +16,7 @@
     update_cache: true
   when: ansible_os_family == "Debian"
 
-- name: Update apt packages
+- name: Update apt packages  # noqa: package-latest
   ansible.builtin.apt:
     name: "*"
     state: latest
