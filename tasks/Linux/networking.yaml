@@ -16,9 +16,11 @@
     nmcli networking off
     sleep 5
     nmcli networking on
+  become: true
 
 - name: Restart RHEL7 networking if needed
   when: rhel_dns_fix.changed and ansible_distribution_major_version < 8
   ansible.builtin.service:
     name: network
     state: restarted
+  become: true

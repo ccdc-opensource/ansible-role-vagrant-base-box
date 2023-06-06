@@ -12,6 +12,7 @@
     owner: root
     group: root
     mode: '0755'
+  become: true
 
 - name: Make /etc/update-motd.d/99-buildinfo a shell script
   when: update_motd.stat.exists
@@ -19,6 +20,7 @@
     line: "#!/bin/sh"
     path: /etc/update-motd.d/99-buildinfo
     insertbefore: BOF
+  become: true
 
 - name: Deploy motd to /etc/motd
   when: not update_motd.stat.exists
@@ -28,3 +30,4 @@
     owner: root
     group: root
     mode: '0755'
+  become: true

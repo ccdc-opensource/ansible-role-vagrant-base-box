@@ -4,20 +4,24 @@
     name: "*"
     state: latest
   when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
+  become: true
 
 - name: Update dnf packages  # noqa: package-latest
   ansible.builtin.dnf:
     name: "*"
     state: latest
   when: ansible_os_family == "RedHat" and ansible_distribution_major_version != "7"
+  become: true
 
 - name: Update apt cache
   ansible.builtin.apt:
     update_cache: true
   when: ansible_os_family == "Debian"
+  become: true
 
 - name: Update apt packages  # noqa: package-latest
   ansible.builtin.apt:
     name: "*"
     state: latest
   when: ansible_os_family == "Debian"
+  become: true
