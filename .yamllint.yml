@@ -57,5 +57,5 @@ rules:
     # Defaults
     max: 200
 
-  ignore:
-    - ".trunk"
+ignore:
+  ".trunk/*"
