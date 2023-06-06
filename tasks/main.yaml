@@ -1,7 +1,7 @@
 ---
 - name: Set OS-specific variables for {{ ansible_os_family }}-{{ ansible_distribution }}-{{ ansible_distribution_major_version }}
   ansible.builtin.include_vars:
-    file: "{{ lookup('ansible.builtin.first_found', files, paths=['vars'], skip=True) }}"
+    file: "{{ file }}"
   vars:
     files:
       - "{{ ansible_os_family }}-{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yaml"
@@ -12,7 +12,9 @@
       - "{{ ansible_system }}.yaml"
       - RedHat.yaml
       - default.yaml
+    file: "{{ lookup('ansible.builtin.first_found', files, skip=True) }}"
   tags: vars
+  when: file
 
 - name: Execute tasks for {{ ansible_os_family }} ({{ ansible_distribution }} {{ ansible_distribution_major_version }})
   ansible.builtin.include_tasks:
