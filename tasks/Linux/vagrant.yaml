@@ -4,7 +4,7 @@
     name: vagrant
     comment: Default Vagrant user
     uid: 1000
-    group: sudo
+    group: wheel
   become: true
 
 - name: Set up default Vagrant ssh key
