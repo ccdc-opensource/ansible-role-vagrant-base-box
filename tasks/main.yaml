@@ -1,31 +1,27 @@
 ---
 - name: Set OS-specific variables for {{ ansible_os_family }}-{{ ansible_distribution }}-{{ ansible_distribution_major_version }}
-  ansible.builtin.include_vars: "{{ lookup('ansible.builtin.first_found', params) }}"
+  ansible.builtin.include_vars:
+    file: "{{ lookup('ansible.builtin.first_found', files, paths=['../vars'], skip=True) }}"
   vars:
-    params:
-      files:
-        - "{{ ansible_os_family }}-{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yaml"
-        - "{{ ansible_os_family }}-{{ ansible_distribution }}.yaml"
-        # This is to allow to distinguish between Windows-Server/Windows-Client
-        - "{{ ansible_os_family }}-{{ ansible_facts.os_installation_type }}.yaml"
-        - "{{ ansible_os_family }}.yaml"
-        - "{{ ansible_system }}.yaml"
-        - RedHat.yaml
-        - default.yaml
-      paths:
-        - "vars"
+    files:
+      - "{{ ansible_os_family }}-{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yaml"
+      - "{{ ansible_os_family }}-{{ ansible_distribution }}.yaml"
+      # This is to allow to distinguish between Windows-Server/Windows-Client
+      - "{{ ansible_os_family }}-{{ ansible_facts.os_installation_type }}.yaml"
+      - "{{ ansible_os_family }}.yaml"
+      - "{{ ansible_system }}.yaml"
+      - RedHat.yaml
+      - default.yaml
   tags: vars
 
 - name: Execute tasks for {{ ansible_os_family }} ({{ ansible_distribution }} {{ ansible_distribution_major_version }})
-  ansible.builtin.include_tasks: "{{ lookup('ansible.builtin.first_found', params) }}"
+  ansible.builtin.include_tasks:
+    file: "{{ lookup('ansible.builtin.first_found', files) }}"
   vars:
-    params:
-      files:
-        - "{{ ansible_os_family }}-{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yaml"
-        - "{{ ansible_os_family }}-{{ ansible_distribution }}.yaml"
-        # This is to allow to distinguish between Windows-Server/Windows-Client
-        - "{{ ansible_os_family }}-{{ ansible_facts.os_installation_type }}.yaml"
-        - "{{ ansible_os_family }}.yaml"
-        - "{{ ansible_system }}.yaml"
-      paths:
-        - "tasks"
+    files:
+      - "{{ ansible_os_family }}-{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yaml"
+      - "{{ ansible_os_family }}-{{ ansible_distribution }}.yaml"
+      # This is to allow to distinguish between Windows-Server/Windows-Client
+      - "{{ ansible_os_family }}-{{ ansible_facts.os_installation_type }}.yaml"
+      - "{{ ansible_os_family }}.yaml"
+      - "{{ ansible_system }}.yaml"
