@@ -11,7 +11,7 @@
   register: rhel_dns_fix
 
 - name: Restart RHEL8+ networking if needed
-  when: rhel_dns_fix.changed and ansible_distribution_major_version >= 8
+  when: rhel_dns_fix.changed and ansible_distribution_major_version|int >= 8
   ansible.builtin.shell: |
     nmcli networking off
     sleep 5
@@ -19,7 +19,7 @@
   become: true
 
 - name: Restart RHEL7 networking if needed
-  when: rhel_dns_fix.changed and ansible_distribution_major_version < 8
+  when: rhel_dns_fix.changed and ansible_distribution_major_version|int < 8
   ansible.builtin.service:
     name: network
     state: restarted
