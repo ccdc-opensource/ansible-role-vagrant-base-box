@@ -10,9 +10,7 @@
       - "{{ ansible_os_family }}-{{ ansible_facts.os_installation_type | default('Server') }}.yaml"
       - "{{ ansible_os_family }}.yaml"
       - "{{ ansible_system }}.yaml"
-      - RedHat.yaml
-      - default.yaml
-    file: "{{ lookup('ansible.builtin.first_found', files, skip=True) }}"
+    file: "{{ lookup('ansible.builtin.first_found', files, paths=['vars'], skip=True) }}"
   tags: vars
   when: file
 
