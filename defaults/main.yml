@@ -17,3 +17,5 @@ update_windows: true
 
 rearrange_drives: true
 drive_configuration: []
+
+sudo_group: wheel
