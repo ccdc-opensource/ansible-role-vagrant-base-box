@@ -1,21 +1,18 @@
 ---
+# Windows settings
 execution_policy: "RemoteSigned"
-
 enable_rdp: true
 enable_ssh: true
 add_vagrant_ssh_pubkey: true
 enable_uac: true
-
 disable_vagrant_password_expiry: true
 disable_network_location_prompt: true
 set_all_networks_private: true
-
 power_plan: "High performance"
-
 precompile_dotnet: true
 update_windows: true
-
 rearrange_drives: true
 drive_configuration: []
 
+# Linux settings
 sudo_group: wheel
