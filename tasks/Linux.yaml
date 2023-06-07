@@ -1,4 +1,7 @@
 ---
+- name: Enable passwordless sudo
+  ansible.builtin.include_tasks: Linux/passwordless_sudo.yaml
+
 - name: Enable vault on CentOS
   when: ansible_distribution == "CentOS"
   ansible.builtin.include_tasks: Linux/enable_centos_vault.yaml
