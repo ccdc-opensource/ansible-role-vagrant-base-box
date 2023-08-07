@@ -25,7 +25,6 @@
     mode: '0755'
   become: true
   when: ansible_os_family == "Debian"
-  
 
 - name: Make /etc/update-motd.d/99-buildinfo a shell script
   when: update_motd.stat.exists
