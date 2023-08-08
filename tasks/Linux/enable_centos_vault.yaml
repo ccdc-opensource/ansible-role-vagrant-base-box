@@ -1,0 +1,27 @@
+---
+- name: Get list of CentOS repository specs
+  ansible.builtin.find:
+    path: /etc/yum.repos.d/
+    patterns: "CentOS-*"
+  register: repo_definitions
+  become: true
+
+- name: Disable mirrorlists for CentOS repos
+  ansible.builtin.replace:
+    path: "{{ file.path }}"
+    regex: mirrorlist=
+    replace: "#mirrorlist="
+  loop: repo_definitions.files
+  loop_control:
+    loop_var: file
+  become: true
+
+- name: Enable vault repos
+  ansible.builtin.replace:
+    path: "{{ file.path }}"
+    regex: "#baseurl=http://mirror.centos.org"
+    replace: "baseurl=http://vault.centos.org"
+  loop: repo_definitions.files
+  loop_control:
+    loop_var: file
+  become: true

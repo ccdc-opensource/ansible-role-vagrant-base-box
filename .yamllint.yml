@@ -56,3 +56,6 @@ rules:
   line-length:
     # Defaults
     max: 200
+
+ignore:
+  ".trunk/*"
