@@ -16,3 +16,6 @@ drive_configuration: []
 
 # Linux settings
 sudo_group: wheel
+
+# MacOS esettings
+remote_macos_user_package: /tmp/uk.ac.cam.ccdc.mac-vagrant-user.pkg
