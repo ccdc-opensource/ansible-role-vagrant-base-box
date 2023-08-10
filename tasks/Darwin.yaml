@@ -1,0 +1,43 @@
+---
+- name: Copy `vagrant` user package
+  ansible.builtin.copy:
+    src: files/uk.ac.cam.ccdc.mac-vagrant-user.pkg
+    dest: "{{ remote_macos_user_package }}"
+
+- name: Create `vagrant` user
+  ansible.builtin.command: sudo installer -pkg {{ remote_macos_user_package }} -target /
+  become: true
+
+- name: Remove `vagrant` user package
+  ansible.builtin.file:
+    path: "{{ remote_macos_user_package }}"
+    state: absent
+
+- name: Copy SetupAssistant preferences for `vagrant` user
+  ansible.builtin.copy:
+    src: files/com.apple.SetupAssistant.{{ ansible_os_family }}-{{ ansible_distribution_major_version }}.plist
+    dest: "/Users/vagrant/Library/Preferences/com.apple.SetupAssistant.plist"
+    owner: vagrant
+    mode: "0600"
+
+- name: Disable Sleep
+  ansible.builtin.command: "{{ item }}"
+  with_items:
+    - systemsetup -setsleep Never
+    - systemsetup -setharddisksleep Never
+    - systemsetup -setcomputersleep Never
+    - systemsetup -setdisplaysleep Never
+  changed_when: false
+  become: true
+
+- name: Additional cleanup for never sleep mode
+  ansible.builtin.include_role:
+    name: feffi.macos-standby
+  vars:
+    standby_delay: false  # noqa: var-naming[no-role-prefix]
+    hibernate_mode: 0  # noqa: var-naming[no-role-prefix]
+    remove_sleepimage: true  # noqa: var-naming[no-role-prefix]
+
+- name: Ensure homebrew is installed
+  ansible.builtin.include_role:
+    name: geerlingguy.homebrew

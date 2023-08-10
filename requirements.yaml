@@ -1,0 +1,8 @@
+---
+# macOS specific roles
+- src: https://github.com/feffi/ansible-macos-standby.git
+  name: feffi.macos-standby
+- src: https://github.com/florianpiesche/ansible-macos-defaults/
+  version: patch-1
+  name: feffi.macos-defaults
+- src: geerlingguy.homebrew
