@@ -5,20 +5,20 @@
     dest: "{{ remote_macos_user_image }}"
 
 - name: Mount user installer package
-  ansible.builtin.command: |
-    mkdir -p "{{ remote_macos_user_mountpoint }}" \
-    && hdiutil attach "{{ remote_macos_user_image }}" -mountpoint "{{ remote_macos_user_mountpoint }}" \
-    && codesign -vvv {{ remote_macos_user_package }}
+  ansible.builtin.shell: |
+    mkdir -p "{{ remote_macos_user_mountpoint }}"
+    hdiutil attach "{{ remote_macos_user_image }}" -mountpoint "{{ remote_macos_user_mountpoint }}"
+    codesign -vvv {{ remote_macos_user_package }}
 
 - name: Create `vagrant` user
   ansible.builtin.command: sudo installer -pkg {{ remote_macos_user_package }} -target /
   become: true
 
 - name: Unmount and remove user installer package
-  ansible.builtin.command: |
-    hdiutil detach "{{ remote_macos_user_image }}" \
-    && rmdir "{{ remote_macos_user_mountpoint }}" \
-    && rm -rf {{ remote_macos_user_package }}
+  ansible.builtin.shell: |
+    hdiutil detach "{{ remote_macos_user_image }}"
+    rmdir "{{ remote_macos_user_mountpoint }}"
+    rm -rf {{ remote_macos_user_package }}
 
 - name: Copy SetupAssistant preferences for `vagrant` user
   ansible.builtin.copy:
