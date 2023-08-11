@@ -1,8 +1,13 @@
 ---
 - name: Copy `vagrant` user package
   ansible.builtin.copy:
-    src: files/uk.ac.cam.ccdc.mac-vagrant-user.pkg
-    dest: "{{ remote_macos_user_package }}"
+    src: files/uk.ac.cam.ccdc.mac-vagrant-user.dmg
+    dest: "{{ remote_macos_user_image }}"
+
+- name: Mount user package
+  ansible.builtin.command: |
+    mkdir -p "{{ remote_macos_user_mountpoint }}"
+    hdiutil attach "{{ remote_macos_user_image }}" -mountpoint "{{ remote_macos_user_mountpoint }}"
 
 - name: Validate code signature on `vagrant` user package
   ansible.builtin.command: codesign -vvv {{ remote_macos_user_package }}
@@ -11,10 +16,10 @@
   ansible.builtin.command: sudo installer -pkg {{ remote_macos_user_package }} -target /
   become: true
 
-- name: Remove `vagrant` user package
-  ansible.builtin.file:
-    path: "{{ remote_macos_user_package }}"
-    state: absent
+- name: Mount user package
+  ansible.builtin.command: |
+    hdiutil detach "{{ remote_macos_user_image }}"
+    rmdir "{{ remote_macos_user_mountpoint }}"
 
 - name: Copy SetupAssistant preferences for `vagrant` user
   ansible.builtin.copy:
