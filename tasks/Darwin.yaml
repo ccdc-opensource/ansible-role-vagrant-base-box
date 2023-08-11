@@ -6,7 +6,7 @@
 
 - name: Create `vagrant` user
   ansible.builtin.shell: |
-    ditto -x "{{ remote_macos_user_archive }}" /tmp/
+    unzip "{{ remote_macos_user_archive }}" -d {{ ansible_env.HOME }}/
     sudo installer -pkg {{ remote_macos_user_package }} -target /
     rm "{{ remote_macos_user_archive }}"
     rm {{ remote_macos_user_package }}
