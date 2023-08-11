@@ -18,6 +18,5 @@ drive_configuration: []
 sudo_group: wheel
 
 # MacOS esettings
-remote_macos_user_mountpoint: /tmp/vagrant-user-mount
-remote_macos_user_image: /tmp/uk.ac.cam.ccdc.mac-vagrant-user.dmg
-remote_macos_user_package: "{{ remote_macos_user_mountpoint }}/uk.ac.cam.ccdc.mac-vagrant-user.pkg"
+remote_macos_user_archive: /tmp/uk.ac.cam.ccdc.mac-vagrant-user.zip
+remote_macos_user_package: /tmp/uk.ac.cam.ccdc.mac-vagrant-user.pkg
