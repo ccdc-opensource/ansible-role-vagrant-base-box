@@ -4,6 +4,9 @@
     src: files/uk.ac.cam.ccdc.mac-vagrant-user.pkg
     dest: "{{ remote_macos_user_package }}"
 
+- name: Validate code signature on `vagrant` user package
+  ansible.builtin.command: codesign -vvv {{ remote_macos_user_package }}
+
 - name: Create `vagrant` user
   ansible.builtin.command: sudo installer -pkg {{ remote_macos_user_package }} -target /
   become: true
