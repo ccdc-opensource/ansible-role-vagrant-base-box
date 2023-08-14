@@ -6,7 +6,7 @@
 
 - name: Install `vagrant` user
   ansible.builtin.command:
-    sudo installer -pkg {{ remote_macos_user_package }} -target /
+    installer -pkg {{ remote_macos_user_package }} -target /
   become: true
 
 - name: Remove `vagrant` user package
