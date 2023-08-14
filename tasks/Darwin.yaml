@@ -11,7 +11,7 @@
 
 - name: Remove `vagrant` user package
   ansible.builtin.file:
-    path: "{{ ansible_env.HOME }}/uk.ac.cam.ccdc.mac-vagrant-user.pkg"
+    path: "{{ remote_macos_user_package }}"
     state: absent
 
 - name: Copy SetupAssistant preferences for `vagrant` user
