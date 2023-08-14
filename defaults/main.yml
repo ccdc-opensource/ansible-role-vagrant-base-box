@@ -16,7 +16,3 @@ drive_configuration: []
 
 # Linux settings
 sudo_group: wheel
-
-# MacOS settings
-remote_macos_user_archive: "{{ ansible_env.HOME }}/uk.ac.cam.ccdc.mac-vagrant-user.zip"
-remote_macos_user_package: "{{ ansible_env.HOME }}/uk.ac.cam.ccdc.mac-vagrant-user.pkg"

@@ -1,16 +1,18 @@
 ---
 - name: Copy `vagrant` user installer package
-  ansible.builtin.copy:
+  ansible.builtin.unarchive:
     src: files/uk.ac.cam.ccdc.mac-vagrant-user.zip
-    dest: "{{ remote_macos_user_archive }}"
+    dest: "{{ ansible_env.HOME }}"
 
-- name: Create `vagrant` user
-  ansible.builtin.shell: |
-    unzip "{{ remote_macos_user_archive }}" -d {{ ansible_env.HOME }}/
+- name: Install `vagrant` user
+  ansible.builtin.command:
     sudo installer -pkg {{ remote_macos_user_package }} -target /
-    rm "{{ remote_macos_user_archive }}"
-    rm {{ remote_macos_user_package }}
   become: true
+
+- name: Remove `vagrant` user package
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/uk.ac.cam.ccdc.mac-vagrant-user.pkg"
+    state: absent
 
 - name: Copy SetupAssistant preferences for `vagrant` user
   ansible.builtin.copy:
