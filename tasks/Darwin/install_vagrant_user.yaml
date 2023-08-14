@@ -37,3 +37,11 @@
   ansible.builtin.file:
     path: "{{ remote_macos_user_package }}"
     state: absent
+
+- name: Copy SetupAssistant preferences for `vagrant` user
+  ansible.builtin.copy:
+    src: files/com.apple.SetupAssistant.{{ ansible_os_family }}-{{ ansible_distribution_major_version }}.plist
+    dest: "/Users/vagrant/Library/Preferences/com.apple.SetupAssistant.plist"
+    owner: vagrant
+    mode: "0600"
+  when: vagrant_user_install.rc != 0

@@ -3,13 +3,6 @@
   when: install_vagrant_user
   ansible.builtin.include_tasks: Darwin/install_vagrant_user.yaml
 
-- name: Copy SetupAssistant preferences for `vagrant` user
-  ansible.builtin.copy:
-    src: files/com.apple.SetupAssistant.{{ ansible_os_family }}-{{ ansible_distribution_major_version }}.plist
-    dest: "/Users/vagrant/Library/Preferences/com.apple.SetupAssistant.plist"
-    owner: vagrant
-    mode: "0600"
-
 - name: Disable Sleep
   ansible.builtin.command: "{{ item }}"
   with_items:
