@@ -23,14 +23,11 @@
   register: vagrant_user_install
   when: vagrant_user_id.rc != 0 and uid_check.rc != 0
 
-- name: Get installation log for `vagrant` user package
-  ansible.builtin.command:
-    cat /var/log/install.log | perl -0ne 'print $1 if /uk.ac.cam.ccdc.mac-vagrant-user.pkg(.*)uk.ac.cam.ccdc.mac-vagrant-user.pkg/sg'
-  register: vagrant_user_log
-
-- name: Print `vagrant` package installation log
-  ansible.builtin.debug:
-    var: vagrant_user_log.stdout_lines
+- name: Download installation log
+  ansible.builtin.fetch:
+    src: /var/log/install.log
+    dest: ./output/installer_logs/
+    flat: true
   when: vagrant_user_install.rc != 0
 
 - name: Remove `vagrant` user package
