@@ -18,4 +18,6 @@ drive_configuration: []
 sudo_group: wheel
 
 # MacOS settings
+install_vagrant_user: true
 remote_macos_user_package: "{{ ansible_env.HOME }}/uk.ac.cam.ccdc.mac-vagrant-user.pkg"
+desired_vagrant_uid: "501"

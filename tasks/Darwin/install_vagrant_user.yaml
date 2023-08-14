@@ -1,0 +1,39 @@
+---
+- name: Check for `vagrant` user
+  ansible.builtin.command: id -u vagrant
+  ignore_errors: true
+  register: vagrant_uid
+
+- name: Check that uid {{ desired_vagrant_uid }} is free
+  ansible.builtin.command: dscl . -list /Users UniqueID | grep {{ desired_vagrant_uid }}
+  ignore_errors: true
+  register: uid_check
+
+- name: Copy `vagrant` user installer package
+  ansible.builtin.unarchive:
+    src: files/uk.ac.cam.ccdc.mac-vagrant-user.zip
+    dest: "{{ ansible_env.HOME }}"
+  when: vagrant_uid.rc != 0 and uid_check.rc != 0
+
+- name: Install `vagrant` user
+  ansible.builtin.command:
+    installer -pkg {{ remote_macos_user_package }} -target /
+  become: true
+  ignore_errors: true
+  register: vagrant_user_install
+  when: vagrant_user_id.rc != 0 and uid_check.rc != 0
+
+- name: Get installation log for `vagrant` user package
+  ansible.builtin.command:
+    cat /var/log/install.log | perl -0ne 'print $1 if /uk.ac.cam.ccdc.mac-vagrant-user.pkg(.*)uk.ac.cam.ccdc.mac-vagrant-user.pkg/sg'
+  register: vagrant_user_log
+
+- name: Print `vagrant` package installation log
+  ansible.builtin.debug:
+    var: vagrant_user_log.stdout_lines
+  when: vagrant_user_install.rc != 0
+
+- name: Remove `vagrant` user package
+  ansible.builtin.file:
+    path: "{{ remote_macos_user_package }}"
+    state: absent
