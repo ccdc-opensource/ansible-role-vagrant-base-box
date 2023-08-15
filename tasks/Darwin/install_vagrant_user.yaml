@@ -21,7 +21,7 @@
   become: true
   ignore_errors: true
   register: vagrant_user_install
-  when: vagrant_user_id.rc != 0 and uid_check.rc != 0
+  when: vagrant_uid.rc != 0 and uid_check.rc != 0
 
 - name: Download installation log
   ansible.builtin.fetch:
