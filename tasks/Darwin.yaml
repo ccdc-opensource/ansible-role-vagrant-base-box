@@ -1,4 +1,9 @@
 ---
+- name: Ensure pyobjc is installed
+  ansible.builtin.pip:
+    name: pyobjc
+    state: latest
+
 - name: Install `vagrant` user
   when: install_vagrant_user
   ansible.builtin.include_tasks: Darwin/install_vagrant_user.yaml
