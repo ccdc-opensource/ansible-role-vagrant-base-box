@@ -28,7 +28,7 @@
     src: /var/log/install.log
     dest: ./output/installer_logs/
     flat: true
-  when: vagrant_user_install.rc != 0
+  when: vagrant_user_install.rc is defined and vagrant_user_install.rc != 0
 
 - name: Remove `vagrant` user package
   ansible.builtin.file:
@@ -41,4 +41,4 @@
     dest: "/Users/vagrant/Library/Preferences/com.apple.SetupAssistant.plist"
     owner: vagrant
     mode: "0600"
-  when: vagrant_user_install.rc != 0
+  when: vagrant_user_install.rc is defined and vagrant_user_install.rc != 0
