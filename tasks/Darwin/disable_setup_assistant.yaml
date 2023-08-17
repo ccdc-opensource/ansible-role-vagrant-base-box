@@ -8,11 +8,13 @@
     file_type: directory
   register: users
 
-- name: Ensure preferences path exists for each user and template
+- name: Ensure preferences path exists for each user
   ansible.builtin.shell: |
-    mkdir -p {{ user.path }}/Library/Preferences
-    chown {{ user.path | basename }} {{ user.path }}/Library
-    chown {{ user.path | basename }} {{ user.path }}/Library/Preferences
+    if [[ "{{ user.path }}" == "/Users/"* ]]; then
+      mkdir -p {{ user.path }}/Library/Preferences
+      chown {{ user.path | basename }} {{ user.path }}/Library
+      chown {{ user.path | basename }} {{ user.path }}/Library/Preferences
+    fi
   loop: "{{ users.files }}"
   loop_control:
     loop_var: user
