@@ -10,14 +10,14 @@
 
 - name: Ensure preferences path exists for each user
   ansible.builtin.shell: |
-    if [[ "{{ user.path }}" == "/Users/"* && "{{ user.path }}" != "/Users/Shared" ]]; then
-      mkdir -p {{ user.path }}/Library/Preferences
-      chown {{ user.path | basename }} {{ user.path }}/Library
-      chown {{ user.path | basename }} {{ user.path }}/Library/Preferences
-    fi
+    mkdir -p {{ user.path }}/Library/Preferences
+    chown {{ user.path | basename }} {{ user.path }}/Library
+    chown {{ user.path | basename }} {{ user.path }}/Library/Preferences
   loop: "{{ users.files }}"
   loop_control:
     loop_var: user
+  become: true
+  when: "'/Users/' in {{ user.path }} && '/Users/Shared' not in {{ user.path }}"
 
 - name: Copy SetupAssistant preferences
   ansible.builtin.copy:
@@ -28,6 +28,8 @@
   loop: "{{ users.files }}"
   loop_control:
     loop_var: user
+  become: true
+  when: "'/Users/' in {{ user.path }} && '/Users/Shared' not in {{ user.path }}"
 
 - name: Disable Setup Assistant screens
   ansible.builtin.shell: |
