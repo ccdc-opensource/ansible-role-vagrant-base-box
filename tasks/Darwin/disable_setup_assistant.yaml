@@ -5,6 +5,8 @@
     path:
       - /System/Library/User Template
       - /Users
+    exclude:
+      - /Users/Shared
     file_type: directory
   register: users
 
