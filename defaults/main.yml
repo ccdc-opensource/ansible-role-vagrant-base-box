@@ -23,7 +23,7 @@ remote_macos_user_package: "{{ ansible_env.HOME }}/uk.ac.cam.ccdc.mac-vagrant-us
 desired_vagrant_uid: "501"
 setup_assistant_preferences:
   - pref_name: DidSeeCloudSetup
-    pref_value: "TRUE"
+    pref_value: "-bool TRUE"
   - pref_name: GestureMovieSeen
     pref_value: "none"
   - pref_name: LastSeenCloudProductVersion
@@ -31,14 +31,14 @@ setup_assistant_preferences:
   - pref_name: LastSeenBuddyBuildVersion
     pref_value: "{{ ansible_osversion }}"
   - pref_name: DidSeePrivacy
-    pref_value: "TRUE"
+    pref_value: "-bool TRUE"
   - pref_name: DidSeeTrueTonePrivacy
-    pref_value: "TRUE"
+    pref_value: "-bool TRUE"
   - pref_name: DidSeeTouchIDSetup
-    pref_value: "TRUE"
+    pref_value: "-bool TRUE"
   - pref_name: DidSeeSiriSetup
-    pref_value: "TRUE"
+    pref_value: "-bool TRUE"
   - pref_name: DidSeeActivationLock
-    pref_value: "TRUE"
+    pref_value: "-bool TRUE"
   - pref_name: DidSeeScreenTime
-    pref_value: "TRUE"
+    pref_value: "-bool TRUE"
