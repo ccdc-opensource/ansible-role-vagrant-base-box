@@ -10,7 +10,7 @@
 
 - name: Ensure preferences path exists for each user
   ansible.builtin.shell: |
-    if [[ "{{ user.path }}" == "/Users/"* && "{{ user.path }} != "/Users/Shared" ]]; then
+    if [[ "{{ user.path }}" == "/Users/"* && "{{ user.path }}" != "/Users/Shared" ]]; then
       mkdir -p {{ user.path }}/Library/Preferences
       chown {{ user.path | basename }} {{ user.path }}/Library
       chown {{ user.path | basename }} {{ user.path }}/Library/Preferences
