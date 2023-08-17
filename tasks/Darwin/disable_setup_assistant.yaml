@@ -1,0 +1,36 @@
+---
+- name: Get list of users and user templates
+  ansible.builtin.find:
+    depth: 1
+    path:
+      - /System/Library/User Template
+      - /Users
+    file_type: directory
+  register: users
+
+- name: Ensure preferences path exists for each user and template
+  ansible.builtin.shell: |
+    mkdir -p {{ user.path }}/Library/Preferences
+    chown {{ user.path | basename }} {{ user.path }}/Library
+    chown {{ user.path | basename }} {{ user.path }}/Library/Preferences
+  loop: users.files
+  loop_control:
+    loop_var: user
+
+- name: Copy SetupAssistant preferences
+  ansible.builtin.copy:
+    src: files/com.apple.SetupAssistant.{{ ansible_os_family }}-{{ ansible_distribution_major_version }}.plist
+    dest: "{{ user.path }}/Library/Preferences/com.apple.SetupAssistant.plist"
+    owner: "{{ user.path | basename }}"
+    mode: "0600"
+  loop: users.files
+  loop_control:
+    loop_var: user
+
+- name: Disable Setup Assistant screens
+  ansible.builtin.shell: |
+    /usr/bin/defaults write ${{ spec.0.path }}/Library/Preferences/com.apple.SetupAssistant \
+      {{ spec.1.pref_name }} {{ spec.1.pref_value }}
+  loop: "{{ product(users.files, setup_assistant_preferences) | list }}"
+  loop_control:
+    loop_var: spec

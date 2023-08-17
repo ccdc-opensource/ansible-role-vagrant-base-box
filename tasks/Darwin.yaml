@@ -4,6 +4,9 @@
     name: pyobjc
     state: latest
 
+- name: Disable Setup Assistant
+  ansible.builtin.include_tasks: Darwin/disable_setup_assistant.yaml
+
 - name: Install `vagrant` user
   when: install_vagrant_user
   ansible.builtin.include_tasks: Darwin/install_vagrant_user.yaml
