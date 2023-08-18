@@ -38,7 +38,7 @@ setup_assistant_preferences:
     pref_value: "-bool TRUE"
   - pref_name: DidSeeSiriSetup
     pref_value: "-bool TRUE"
-  - pref_name: DidSeeActivationLock
-    pref_value: "-bool TRUE"
+  # - pref_name: DidSeeActivationLock
+  #   pref_value: "-bool TRUE"
   - pref_name: DidSeeScreenTime
     pref_value: "-bool TRUE"
