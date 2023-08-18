@@ -46,8 +46,7 @@
 
 - name: Disable Setup Assistant screens
   ansible.builtin.shell: |
-    /usr/bin/defaults write {{ spec.0.path }}/Library/Preferences/com.apple.SetupAssistant \
-      {{ spec.1.pref_name }} {{ spec.1.pref_options | join(" ") }}
+    /usr/bin/defaults write {{ spec.0.path }}/Library/Preferences/com.apple.SetupAssistant {{ spec.1.pref_name }} {{ spec.1.pref_options | join(" ") }}
   loop: "{{ users.files | product(setup_assistant_preferences) | list }}"
   loop_control:
     loop_var: spec
