@@ -5,7 +5,7 @@
   register: update_motd
 
 - name: Deploy motd to /etc/update-motd.d/
-  when: update_motd.stat.exists
+  when: update_motd.stat.exists and ansible_os_family == "RedHat"
   ansible.builtin.template:
     src: templates/motd.j2
     dest: /etc/update-motd.d/99-buildinfo
@@ -13,10 +13,9 @@
     group: root
     mode: '0755'
   become: true
-  when: ansible_os_family == "RedHat"
 
 - name: Deploy motd to /etc/update-motd.d/
-  when: update_motd.stat.exists
+  when: update_motd.stat.exists and ansible_os_family == "Debian"
   ansible.builtin.template:
     src: templates/motd-ubuntu.j2
     dest: /etc/update-motd.d/99-buildinfo
@@ -24,7 +23,6 @@
     group: root
     mode: '0755'
   become: true
-  when: ansible_os_family == "Debian"
 
 - name: Make /etc/update-motd.d/99-buildinfo a shell script
   when: update_motd.stat.exists

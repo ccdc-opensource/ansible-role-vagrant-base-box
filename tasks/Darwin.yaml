@@ -2,7 +2,7 @@
 - name: Ensure pyobjc is installed
   ansible.builtin.pip:
     name: pyobjc
-    state: latest
+    state: present
 
 - name: Disable Setup Assistant
   ansible.builtin.include_tasks: Darwin/disable_setup_assistant.yaml

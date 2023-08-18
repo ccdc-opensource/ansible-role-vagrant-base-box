@@ -1,10 +1,10 @@
 ---
-- name: Check for `vagrant` user
+- name: Check for `vagrant` user  # noqa: no-changed-when
   ansible.builtin.command: id -u vagrant
   ignore_errors: true
   register: vagrant_uid
 
-- name: Check that uid {{ desired_vagrant_uid }} is free
+- name: Check that uid {{ desired_vagrant_uid }} is free  # noqa: no-changed-when
   ansible.builtin.command: dscl . -list /Users UniqueID | grep {{ desired_vagrant_uid }}
   ignore_errors: true
   register: uid_check
