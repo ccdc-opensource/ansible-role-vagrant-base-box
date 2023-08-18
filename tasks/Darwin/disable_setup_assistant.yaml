@@ -22,7 +22,7 @@
 
 - name: Debug preferences file owner
   ansible.builtin.debug:
-    msg: "{{ user.path | regex_search('/Users/(?P<name>.*)', '\\g<name>') | default(root)"
+    msg: "{{ user.path | regex_search('\/Users\/(?P<name>.*)', '\\g<name>') | default(root)"
   loop: "{{ users.files }}"
   loop_control:
     loop_var: user
@@ -31,7 +31,7 @@
   ansible.builtin.copy:
     src: files/com.apple.SetupAssistant.{{ ansible_os_family }}-{{ ansible_distribution_major_version }}.plist
     dest: "{{ user.path }}/Library/Preferences/com.apple.SetupAssistant.plist"
-    owner: "{{ user.path | regex_search('/Users/(?P<name>.*)', '\\g<name>') | default(root)"
+    owner: "{{ user.path | regex_search('\/Users\/(?P<name>.*)', '\\g<name>') | default(root)"
     mode: "0600"
   loop: "{{ users.files }}"
   loop_control:
