@@ -9,21 +9,29 @@
   register: users
 
 - name: Ensure preferences path exists for each user
-  ansible.builtin.shell: |
-    mkdir -p {{ user.path }}/Library/Preferences
-    chown {{ user.path | basename }} {{ user.path }}/Library
-    chown {{ user.path | basename }} {{ user.path }}/Library/Preferences
+  ansible.builtin.file:
+    path: "{{ user.path }}/Library/Preferences"
+    state: directory
+    owner: "{{ user.path | basename }}"
+    mode: 0600
   loop: "{{ users.files }}"
   loop_control:
     loop_var: user
   become: true
   when: "'/Users/' in user.path and '/Users/Shared' not in user.path"
 
+- name: Debug preferences file owner
+  ansible.builtin.debug:
+    msg: "{{ user.path | regex_search('/Users/(?P<name>.*)', '\\g<name>') | default(root)"
+  loop: "{{ users.files }}"
+  loop_control:
+    loop_var: user
+
 - name: Copy SetupAssistant preferences
   ansible.builtin.copy:
     src: files/com.apple.SetupAssistant.{{ ansible_os_family }}-{{ ansible_distribution_major_version }}.plist
     dest: "{{ user.path }}/Library/Preferences/com.apple.SetupAssistant.plist"
-    owner: "{{ user.path | basename }}"
+    owner: "{{ user.path | regex_search('/Users/(?P<name>.*)', '\\g<name>') | default(root)"
     mode: "0600"
   loop: "{{ users.files }}"
   loop_control:
