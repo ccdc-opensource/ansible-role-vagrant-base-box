@@ -29,7 +29,7 @@
   loop_control:
     loop_var: user
   become: true
-  when: "'/Users/' in user.path and '/Users/Shared' not in user.path"
+  when: "'/Users/Shared' not in user.path"
 
 - name: Disable Setup Assistant screens
   ansible.builtin.shell: |
