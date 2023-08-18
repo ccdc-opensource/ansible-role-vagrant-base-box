@@ -20,13 +20,6 @@
   become: true
   when: "'/Users/' in user.path and '/Users/Shared' not in user.path"
 
-- name: Debug preferences file owner
-  ansible.builtin.debug:
-    msg: "{{ user.path | regex_search('\/Users\/(?P<name>.*)', '\\g<name>') | default(root)"
-  loop: "{{ users.files }}"
-  loop_control:
-    loop_var: user
-
 - name: Copy SetupAssistant preferences for user templates
   ansible.builtin.copy:
     src: files/com.apple.SetupAssistant.{{ ansible_os_family }}-{{ ansible_distribution_major_version }}.plist
