@@ -38,5 +38,5 @@
   loop: "{{ users.files | product(setup_assistant_preferences) | list }}"
   loop_control:
     loop_var: spec
-  when: "'/Users/Shared' not in user.path"
+  when: "'/Users/Shared' not in spec.0.path"
   become: true
