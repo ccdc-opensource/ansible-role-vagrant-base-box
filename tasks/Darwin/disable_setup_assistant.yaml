@@ -39,3 +39,4 @@
   loop_control:
     loop_var: spec
   when: "'/Users/Shared' not in user.path"
+  become: true
