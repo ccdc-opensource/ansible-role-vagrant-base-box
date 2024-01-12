@@ -11,6 +11,10 @@
   when: install_vagrant_user
   ansible.builtin.include_tasks: Darwin/install_vagrant_user.yaml
 
+- name: Add default `vagrant` public key for provisioning
+  when: install_vagrant_user
+  ansible.builtin.include_tasks: Darwin/add_vagrant_public_key.yaml
+
 - name: Disable Sleep
   ansible.builtin.command: "{{ item }}"
   with_items:
@@ -31,4 +35,4 @@
 
 - name: Ensure homebrew is installed
   ansible.builtin.include_role:
-    name: geerlingguy.homebrew
+    name: geerlingguy.mac.homebrew
