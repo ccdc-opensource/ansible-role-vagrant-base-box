@@ -21,7 +21,7 @@
 
 - name: Add Vagrant public key for provisioning
   ansible.builtin.authorized_key:
-    user: "{{ user }}"
+    user: "{{ user.path | basename }}"
     state: present
     key: "{{ lookup('url', 'https://github.com/hashicorp/vagrant/blob/master/keys/vagrant.pub', split_lines=False) }}"
   loop: "{{ users.files }}"
