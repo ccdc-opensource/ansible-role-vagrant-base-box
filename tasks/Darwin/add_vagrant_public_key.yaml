@@ -7,24 +7,23 @@
     file_type: directory
   register: users
 
-- name: Ensure .ssh path exists for each user
-  ansible.builtin.file:
-    path: "{{ user.path }}/.ssh"
-    state: directory
-    owner: "{{ user.path | basename }}"
-    mode: 0600
-  loop: "{{ users.files }}"
-  loop_control:
-    loop_var: user
-  become: true
+- name: Set up Vagrant SSH keys
   when: "'/Users/Shared' not in user.path"
-
-- name: Add Vagrant public key for provisioning
-  ansible.builtin.authorized_key:
-    user: "{{ user.path | basename }}"
-    state: present
-    key: "{{ lookup('url', 'https://github.com/hashicorp/vagrant/blob/master/keys/vagrant.pub', split_lines=False) }}"
   loop: "{{ users.files }}"
   loop_control:
     loop_var: user
   become: true
+  block:
+    - name: Ensure .ssh path exists for each user
+      ansible.builtin.file:
+        path: "{{ user.path }}/.ssh"
+        state: directory
+        owner: "{{ user.path | basename }}"
+        mode: 0600
+
+    - name: Add Vagrant public key for provisioning
+      when: "'/Users/Shared' not in user.path"
+      ansible.builtin.authorized_key:
+        user: "{{ user.path | basename }}"
+        state: present
+        key: "{{ lookup('url', 'https://raw.githubusercontent.com/hashicorp/vagrant/master/keys/vagrant.pub', split_lines=False) }}"
