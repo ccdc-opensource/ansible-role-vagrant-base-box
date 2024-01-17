@@ -28,4 +28,4 @@
   ansible.builtin.authorized_key:
     user: "{{ user.path | basename }}"
     state: present
-    key: "{{ lookup('url', 'https://raw.githubusercontent.com/hashicorp/vagrant/master/keys/vagrant.pub', split_lines=False) }}"
+    key: "{{ lookup('url', 'https://raw.githubusercontent.com/hashicorp/vagrant/main/keys/vagrant.pub', split_lines=False) }}"
