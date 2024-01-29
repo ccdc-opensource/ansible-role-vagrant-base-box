@@ -1,0 +1,54 @@
+---
+- name: Get list of users and user templates
+  ansible.builtin.find:
+    depth: 1
+    path:
+      - /System/Library/User Template
+      - /Users
+    file_type: directory
+  register: users
+
+- name: Ensure preferences path exists for each user
+  ansible.builtin.file:
+    path: "{{ user.path }}/Library/Preferences"
+    state: directory
+    owner: "{{ user.path | basename }}"
+    mode: 0600
+  loop: "{{ users.files }}"
+  loop_control:
+    loop_var: user
+  become: true
+  when: "'/Users/' in user.path and '/Users/Shared' not in user.path"
+
+- name: Copy SetupAssistant preferences for user templates
+  ansible.builtin.copy:
+    src: files/com.apple.SetupAssistant.{{ ansible_os_family }}-{{ ansible_distribution_major_version }}.plist
+    dest: "{{ user.path }}/Library/Preferences/com.apple.SetupAssistant.plist"
+    owner: root
+    mode: "0600"
+  loop: "{{ users.files }}"
+  loop_control:
+    loop_var: user
+  become: true
+  when: "'/System/Library/User Template' in user.path"
+
+- name: Copy SetupAssistant preferences for actual users
+  ansible.builtin.copy:
+    src: files/com.apple.SetupAssistant.{{ ansible_os_family }}-{{ ansible_distribution_major_version }}.plist
+    dest: "{{ user.path }}/Library/Preferences/com.apple.SetupAssistant.plist"
+    owner: "{{ user.path | basename }}"
+    mode: "0600"
+  loop: "{{ users.files }}"
+  loop_control:
+    loop_var: user
+  become: true
+  when: "'/Users/Shared' not in user.path and '/System/Library/User Template' not in user.path"
+
+- name: Disable Setup Assistant screens
+  ansible.builtin.shell: |
+    /usr/bin/defaults write "{{ spec.0.path }}/Library/Preferences/com.apple.SetupAssistant" {{ spec.1.pref_name }} {{ spec.1.pref_options | join(" ") }}
+  loop: "{{ users.files | product(setup_assistant_preferences) | list }}"
+  loop_control:
+    loop_var: spec
+  when: "'/Users/Shared' not in spec.0.path"
+  become: true

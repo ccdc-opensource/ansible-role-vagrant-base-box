@@ -16,3 +16,46 @@ drive_configuration: []
 
 # Linux settings
 sudo_group: wheel
+
+# MacOS settings
+install_vagrant_user: true
+remote_macos_user_package: "{{ ansible_env.HOME }}/uk.ac.cam.ccdc.mac-vagrant-user.pkg"
+desired_vagrant_uid: "501"
+setup_assistant_preferences:
+  - pref_name: DidSeeCloudSetup
+    pref_options:
+      - -bool
+      - "TRUE"
+  - pref_name: GestureMovieSeen
+    pref_options:
+      - none
+  - pref_name: LastSeenCloudProductVersion
+    pref_options:
+      - "{{ ansible_distribution_version }}"
+  - pref_name: LastSeenBuddyBuildVersion
+    pref_options:
+      - "{{ ansible_osversion }}"
+  - pref_name: DidSeePrivacy
+    pref_options:
+      - -bool
+      - "TRUE"
+  - pref_name: DidSeeTrueTonePrivacy
+    pref_options:
+      - -bool
+      - "TRUE"
+  - pref_name: DidSeeTouchIDSetup
+    pref_options:
+      - -bool
+      - "TRUE"
+  - pref_name: DidSeeSiriSetup
+    pref_options:
+      - -bool
+      - "TRUE"
+  - pref_name: DidSeeActivationLock
+    pref_options:
+      - -bool
+      - "TRUE"
+  - pref_name: DidSeeScreenTime
+    pref_options:
+      - -bool
+      - "TRUE"

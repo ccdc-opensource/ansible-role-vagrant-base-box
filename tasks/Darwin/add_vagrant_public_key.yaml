@@ -1,0 +1,31 @@
+---
+- name: Get list of users
+  ansible.builtin.find:
+    depth: 1
+    path:
+      - /Users
+    file_type: directory
+  register: users
+
+- name: Ensure .ssh path exists for each user
+  become: true
+  when: "'/Users/Shared' not in user.path"
+  loop: "{{ users.files }}"
+  loop_control:
+    loop_var: user
+  ansible.builtin.file:
+    path: "{{ user.path }}/.ssh"
+    state: directory
+    owner: "{{ user.path | basename }}"
+    mode: 0600
+
+- name: Add Vagrant public key for provisioning
+  become: true
+  when: "'/Users/Shared' not in user.path"
+  loop: "{{ users.files }}"
+  loop_control:
+    loop_var: user
+  ansible.builtin.authorized_key:
+    user: "{{ user.path | basename }}"
+    state: present
+    key: "{{ lookup('url', 'https://raw.githubusercontent.com/hashicorp/vagrant/main/keys/vagrant.pub', split_lines=False) }}"

@@ -1,0 +1,3 @@
+---
+remote_macos_user_package: /tmp/uk.ac.cam.ccdc.mac-vagrant-user.pkg
+github_repo_name: packer-basebox-macos

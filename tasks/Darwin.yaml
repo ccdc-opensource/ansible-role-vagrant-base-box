@@ -1,0 +1,38 @@
+---
+- name: Ensure pyobjc is installed
+  ansible.builtin.pip:
+    name: pyobjc
+    state: present
+
+- name: Disable Setup Assistant
+  ansible.builtin.include_tasks: Darwin/disable_setup_assistant.yaml
+
+- name: Install `vagrant` user
+  when: install_vagrant_user
+  ansible.builtin.include_tasks: Darwin/install_vagrant_user.yaml
+
+- name: Add default `vagrant` public key for provisioning
+  when: install_vagrant_user
+  ansible.builtin.include_tasks: Darwin/add_vagrant_public_key.yaml
+
+- name: Disable Sleep
+  ansible.builtin.command: "{{ item }}"
+  with_items:
+    - systemsetup -setsleep Never
+    - systemsetup -setharddisksleep Never
+    - systemsetup -setcomputersleep Never
+    - systemsetup -setdisplaysleep Never
+  changed_when: false
+  become: true
+
+- name: Additional cleanup for never sleep mode
+  ansible.builtin.include_role:
+    name: feffi.macos-standby
+  vars:
+    standby_delay: false  # noqa: var-naming[no-role-prefix]
+    hibernate_mode: 0  # noqa: var-naming[no-role-prefix]
+    remove_sleepimage: true  # noqa: var-naming[no-role-prefix]
+
+- name: Ensure homebrew is installed
+  ansible.builtin.include_role:
+    name: geerlingguy.mac.homebrew
