@@ -1,7 +1,7 @@
 ---
 - name: Set OS-specific variables for {{ ansible_os_family }}-{{ ansible_distribution }}-{{ ansible_distribution_major_version }}
   ansible.builtin.include_vars:
-    file: "{{ file }}"
+    file: "{{ lookup('ansible.builtin.first_found', files, paths=['vars'], skip=True) }}"
   vars:
     files:
       - "{{ ansible_os_family }}-{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yaml"
@@ -10,7 +10,6 @@
       - "{{ ansible_os_family }}-{{ ansible_facts.os_installation_type | default('Server') }}.yaml"
       - "{{ ansible_os_family }}.yaml"
       - "{{ ansible_system }}.yaml"
-    file: "{{ lookup('ansible.builtin.first_found', files, paths=['vars'], skip=True) }}"
   tags: vars
   when: file
 
