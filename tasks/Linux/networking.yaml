@@ -24,3 +24,7 @@
     name: network
     state: restarted
   become: true
+
+- name: Clear Machine ID
+  ansible.builtin.command: ": >| /etc/machine-id"
+  become: true
