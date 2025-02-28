@@ -1,0 +1,6 @@
+---
+- name: Clear Machine ID
+  ansible.builtin.shell: |
+    : >| /etc/machine-id
+  become: true
+  listen: "clear machine id"
