@@ -1,2 +1,3 @@
 ---
 github_repo_name: packer-basebox-centos
+sudo_group: wheel
