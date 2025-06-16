@@ -1,7 +1,7 @@
 ---
-- name: Rearrange drives
-  when: rearrange_drives
-  ansible.builtin.include_tasks: Windows/rearrange_drives.yaml
+# - name: Rearrange drives
+#   when: rearrange_drives
+#   ansible.builtin.include_tasks: Windows/rearrange_drives.yaml
 
 - name: Install Windows updates
   when: update_windows
