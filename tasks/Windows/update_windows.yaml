@@ -4,7 +4,5 @@
     category_names: '*'
     reboot: true
     reject_list: "VMware, Inc. - Net*"
+    reboot_timeout: 3600
   ignore_unreachable: true
-
-- name: Wait for system to become reachable
-  ansible.builtin.wait_for_connection:
