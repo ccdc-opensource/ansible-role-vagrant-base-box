@@ -1,18 +1,16 @@
 ---
 - name: Set OS-specific variables for {{ ansible_os_family }}-{{ ansible_distribution }}-{{ ansible_distribution_major_version }}
   ansible.builtin.include_vars:
-    file: "{{ file }}"
+    file: "{{ lookup('ansible.builtin.first_found', files, skip=True) }}"
   vars:
     files:
-      - "{{ ansible_os_family }}-{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yaml"
-      - "{{ ansible_os_family }}-{{ ansible_distribution }}.yaml"
+      - "vars/{{ ansible_os_family }}-{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yaml"
+      - "vars/{{ ansible_os_family }}-{{ ansible_distribution }}.yaml"
       # This is to allow to distinguish between Windows-Server/Windows-Client
-      - "{{ ansible_os_family }}-{{ ansible_facts.os_installation_type | default('Server') }}.yaml"
-      - "{{ ansible_os_family }}.yaml"
-      - "{{ ansible_system }}.yaml"
-    file: "{{ lookup('ansible.builtin.first_found', files, paths=['vars'], skip=True) }}"
+      - "vars/{{ ansible_os_family }}-{{ ansible_facts.os_installation_type | default('Server') }}.yaml"
+      - "vars/{{ ansible_os_family }}.yaml"
+      - "vars/{{ ansible_system }}.yaml"
   tags: vars
-  when: file
 
 - name: Execute tasks for {{ ansible_os_family }} ({{ ansible_distribution }} {{ ansible_distribution_major_version }})
   ansible.builtin.include_tasks:
